@@ -19,7 +19,7 @@ public class DB {
 			String dbPw = "1234";
 			Class.forName(dbDriver);
 			conn = DriverManager.getConnection(dbUrl, dbId, dbPw);
-			System.out.println("== DB 접속 성공 ==");
+			//System.out.println("== DB 접속 성공 ==");
 		} catch (Exception e) {
 //			e.printStackTrace();
 			System.out.println("== DB 접속 실패 ==");
@@ -38,7 +38,7 @@ public class DB {
 			if (conn != null) {
 				conn.close();
 			}
-			System.out.println("== DB 접속 끊기 성공 ==");
+			//System.out.println("== DB 접속 끊기 성공 ==");
 
 		} catch (Exception e) {
 			System.out.println("== DB 접속 끊기 실패 ==");

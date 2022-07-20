@@ -14,11 +14,11 @@ public class MemberDAO {
 	ResultSet rs = null;
 
 	public ArrayList<MemberDTO> getSelectAll() {
-		ArrayList<MemberDTO> list = new ArrayList();
+		ArrayList<MemberDTO> list = new ArrayList<>();
 		try {
 			conn = DB.dbConn();
 			// =============================================================================================
-			String sql = "select * from member";
+			String sql = "select * from member order by memberNo asc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery(); // select는 executeQuery;
 
@@ -66,6 +66,7 @@ public class MemberDAO {
 				String address = rs.getString("memberAddress");
 				Date regiDate = rs.getDate("regiDate");
 				
+				tmp.setMemberNO(no);
 				tmp.setMemberId(id);
 				tmp.setMemberName(name);
 				tmp.setMemberPhone(phone);
@@ -73,8 +74,6 @@ public class MemberDAO {
 				tmp.setMemberEmail(email);
 				tmp.setMemberAddress(address);
 				tmp.setRegiDate(regiDate);
-
-				
 			} 
 
 		} catch (Exception e) {
@@ -100,7 +99,27 @@ public class MemberDAO {
 			pstmt.setString(7, dto.getMemberAddress());
 
 			result = pstmt.executeUpdate(); // 몇개가 추가 되었는지 insert, delete, update 는 executeUpdate;
-			System.out.println(result);
+		} catch (Exception e) {
+			
+		} finally {
+			DB.dbConnClose(rs, pstmt, conn);
+		}
+		return result;
+	}
+	
+	public boolean check(MemberDTO dto) {
+		boolean result = false;
+		try {
+			conn = DB.dbConn();
+			String sqlcheck = "select * from where memberNO = ?";
+			pstmt = conn.prepareStatement(sqlcheck);
+			pstmt.setInt(1, dto.getMemberNO());
+			rs = pstmt.executeQuery();
+			if(!rs.next()) {
+				System.out.println("업데이트할 정보가 존재하지 않습니다.");
+				result = true;
+			}
+			
 		} catch (Exception e) {
 			System.out.println("-- DB 접속 실패 --");
 		} finally {
@@ -108,18 +127,22 @@ public class MemberDAO {
 		}
 		return result;
 	}
+	
 
 	public int setUpdate(MemberDTO dto) {
 		int result = 0;
 		try {
 			conn = DB.dbConn();
-			String sql = "update member set memberId = ?, memberName = ? where memberNO = ?";
+			
+			String sql = "update member set memberName = ?,memberPhone = ?,memberEmail = ?,memberAddress = ?  where memberNO = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getMemberId());
-			pstmt.setString(2, dto.getMemberName());
-			pstmt.setInt(3, dto.getMemberNO());
+			pstmt.setString(1, dto.getMemberName());
+			pstmt.setString(2, dto.getMemberPhone());
+			pstmt.setString(3, dto.getMemberEmail());
+			pstmt.setString(4, dto.getMemberAddress());
+			pstmt.setInt(5, dto.getMemberNO());
 			result = pstmt.executeUpdate(); // 몇개가 추가 되었는지 insert, delete, update 는 executeUpdate;
-
+			
 		} catch (Exception e) {
 			System.out.println("-- DB 접속 실패 --");
 		} finally {

@@ -14,18 +14,21 @@ public class SungjukDAO {
 	ResultSet rs = null;
 
 	public ArrayList<SungjukDTO> getSelectAll() {
-		ArrayList<SungjukDTO> list = new ArrayList();
+		ArrayList<SungjukDTO> list = new ArrayList<>();
 		try {
 			conn = DB.dbConn();
 
-			String sql = "select no,name,avg,grade,regDate from sungjuk";
+			String sql = "select * from sungjuk order by no desc";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
 				int no = rs.getInt("no");
 				String name = rs.getString("name");
-		
+				int kor = rs.getInt("kor");
+				int eng = rs.getInt("eng");
+				int mat = rs.getInt("mat");
+				int tot = rs.getInt("tot");
 				double avg = rs.getDouble("avg");
 				String grade = rs.getString("grade");
 				Date regDate = rs.getDate("regDate");
@@ -33,6 +36,10 @@ public class SungjukDAO {
 				SungjukDTO dto = new SungjukDTO();
 				dto.setSungjukNo(no);
 				dto.setSungjukName(name);
+				dto.setKor(kor);
+				dto.setEng(eng);
+				dto.setMat(mat);
+				dto.setTot(tot);
 				dto.setAvg(avg);
 				dto.setGrade(grade);
 				dto.setRegiDate(regDate);
